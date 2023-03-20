@@ -21,5 +21,19 @@ const loginValidationMethod = (value) => {
   const loginJoiSchema = Joi.object(loginObject);
   return loginJoiSchema.validate(value);
 };
+const changePasswordValidationMethod = (value) => {
+  const changePasswordObject = {
+    email: Joi.string().required().min(5).max(255).email(),
+    old_password: Joi.string().required().min(6).max(1024),
+    new_password: Joi.string().required().min(6).max(1024),
+  };
 
-module.exports = { registerValidationMethod, loginValidationMethod };
+  const changePasswordJoiSchema = Joi.object(changePasswordObject);
+  return changePasswordJoiSchema.validate(value);
+};
+
+module.exports = {
+  registerValidationMethod,
+  loginValidationMethod,
+  changePasswordValidationMethod,
+};

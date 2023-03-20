@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const {
   registerValidationMethod,
   loginValidationMethod,
+  changePasswordValidationMethod,
 } = require("../validations/validation");
 
 const index = (req, res) => {
@@ -98,9 +99,47 @@ const login = async (req, res) => {
   res.header("auth-token", token).send(newUser);
 };
 
+const change_password = async (req, res) => {
+  //=====================get user request data========================
+
+  const { email, old_password, new_password } = req.body;
+
+  //===================Validate user request object===========================
+
+  const { error, value } = changePasswordValidationMethod(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  //=====================get user object from db for specified user email========================
+
+  let user = await User.findOne({ email: email });
+  if (!user) return res.status(400).send("unAuthorized user");
+
+  //====================check if the old password is correct========================
+
+  const validPassword = await bcrypt.compare(old_password, user.hashedPassword);
+  if (!validPassword) return res.status(400).send("Invalid password");
+
+  //=====================hash password========================
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(new_password, salt);
+
+  //======================saving new password to DB=======================
+
+  User.updateOne({ email: email }, { hashedPassword: hashedPassword })
+    .then((result) => {
+      console.log(result);
+      res.send("password changed");
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(400).send(error);
+    });
+};
+
 module.exports = {
   index,
   register,
   admin_register,
   login,
+  change_password,
 };
