@@ -9,6 +9,7 @@ const {
   change_password,
   edit_user_info,
   delete_user_account,
+  get_admin_list,
 } = require("../controllers/authController");
 
 router.get("/", index);
@@ -18,5 +19,6 @@ router.post("/login", login);
 router.put("/changepassword", verify, change_password);
 router.put("/edituserinfo", verify, edit_user_info);
 router.delete("/delete", verify, delete_user_account);
+router.get("/getadminlist", get_admin_list);
 
 module.exports = router;

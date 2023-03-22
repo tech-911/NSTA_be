@@ -186,6 +186,18 @@ const delete_user_account = async (req, res) => {
   }
 };
 
+const get_admin_list = async (req, res) => {
+  User.find({ role: "admin" }, function (err, users) {
+    if (err) {
+      console.error(err);
+      return res.status(400).send(err);
+    } else {
+      console.log(users);
+      res.send(users);
+    }
+  });
+};
+
 module.exports = {
   index,
   register,
@@ -194,4 +206,5 @@ module.exports = {
   change_password,
   edit_user_info,
   delete_user_account,
+  get_admin_list,
 };
