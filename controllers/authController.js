@@ -1,4 +1,5 @@
 const { User } = require("../model/User");
+const { Booking } = require("../model/Booking");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {
@@ -137,6 +138,8 @@ const change_password = async (req, res) => {
     });
 };
 
+//===================Edit user info controller===========================
+
 const edit_user_info = async (req, res) => {
   //=====================get user request data========================
 
@@ -158,8 +161,29 @@ const edit_user_info = async (req, res) => {
   } catch (err) {
     return res.status(400).send(err);
   }
+};
 
-  //===================check and update bookings db===========================
+//===================Delete account controller (Deilcate)===========================
+
+const delete_user_account = async (req, res) => {
+  const { _id } = req.body;
+
+  try {
+    const response1 = await Booking.deleteMany({
+      user_id: _id,
+    });
+
+    console.log(response1);
+
+    const response2 = await User.deleteMany({
+      _id: _id,
+    });
+    console.log(response2);
+    res.send("Account Deleted");
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
 };
 
 module.exports = {
@@ -169,4 +193,5 @@ module.exports = {
   login,
   change_password,
   edit_user_info,
+  delete_user_account,
 };
