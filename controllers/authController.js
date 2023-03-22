@@ -186,14 +186,14 @@ const delete_user_account = async (req, res) => {
   }
 };
 
-const get_admin_list = async (req, res) => {
-  User.find({ role: "admin" }, function (err, users) {
+const get_admin_list = (req, res) => {
+  User.find({ role: "admin" }, function (err, admins) {
     if (err) {
       console.error(err);
       return res.status(400).send(err);
     } else {
-      console.log(users);
-      res.send(users);
+      console.log(admins);
+      res.send(admins);
     }
   });
 };

@@ -13,12 +13,12 @@ const {
 } = require("../controllers/authController");
 
 router.get("/", index);
+router.get("/getadminlist", verify, get_admin_list);
 router.post("/register", register);
 router.post("/admin_register", verify, admin_register);
 router.post("/login", login);
 router.put("/changepassword", verify, change_password);
 router.put("/edituserinfo", verify, edit_user_info);
 router.delete("/delete", verify, delete_user_account);
-router.get("/getadminlist", get_admin_list);
 
 module.exports = router;
