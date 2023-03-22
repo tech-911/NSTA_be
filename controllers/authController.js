@@ -5,6 +5,7 @@ const {
   registerValidationMethod,
   loginValidationMethod,
   changePasswordValidationMethod,
+  editUserInfoValidationMethod,
 } = require("../validations/validation");
 
 const index = (req, res) => {
@@ -136,10 +137,36 @@ const change_password = async (req, res) => {
     });
 };
 
+const edit_user_info = async (req, res) => {
+  //=====================get user request data========================
+
+  const { name, email, _id } = req.body;
+
+  //===================Validate user request object===========================
+
+  const { error, value } = editUserInfoValidationMethod(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  //===================check and update user db===========================
+  try {
+    const response = await User.updateMany(
+      { _id: _id },
+      { $set: { name: name, email: email } }
+    );
+    console.log(response);
+    res.send(response);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+
+  //===================check and update bookings db===========================
+};
+
 module.exports = {
   index,
   register,
   admin_register,
   login,
   change_password,
+  edit_user_info,
 };
